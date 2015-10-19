@@ -8,7 +8,7 @@ in config file:
 'components' => [
 	...
     'view'         => [
-        'class' => 'shershennm/seo',
+        'class' => 'shershennm\seo\CustomView',
         'controllerNamespace' => \\seo controllers namespace
     ],
     ...
@@ -16,7 +16,7 @@ in config file:
 ```
 seo controller example:
 ```sh
-class AppController extends Object
+class AppController
 {
 	public function actionIndex()
 	{

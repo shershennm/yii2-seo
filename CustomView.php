@@ -4,6 +4,7 @@ namespace shershennm\seo;
 
 use Yii;
 use yii\web\View;
+use yii\helpers\Html;
 
 /**
 * 
@@ -60,7 +61,7 @@ class CustomView extends View
 
 	private function buildControllerClass()
 	{
-		return sprintf('%s\%sController', $this->seoControllerNamespace, ucfirst($this->controller->id));
+		return sprintf('%s\%sController', $this->controllerNamespace, ucfirst($this->controller->id));
 	}
 
 	private function buildActionFunction()
