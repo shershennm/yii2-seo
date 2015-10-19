@@ -1,0 +1,29 @@
+{
+	"name": "shershennm/yii2-seo",
+	"description": "Yii2 extension for seo.com",
+	"version": "0.0.2",
+	"type": "yii2-extension",
+	"keywords": ["yii2", "seo", "keywords", "meta"],
+	"homepage": "https://github.com/shershennm/yii2-seo",
+	"time": "2015-10-19",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "shershennm",
+			"email": "shershennick@gmail.com",
+			"role": "Developer"
+		}
+	],
+	"support": {
+		"source": "https://github.com/shershennm/yii2-seo"
+	},
+	"require": {
+		"php": ">=5.4.0",
+		"yiisoft/yii2": "*"
+	},
+	"autoload": {
+		"psr-4": {
+			"shershennm\\seo\\": ""
+		}
+	}
+}
