@@ -16,7 +16,7 @@ in config file:
 ```
 seo controller example:
 ```sh
-class AppController
+class SiteController
 {
 	public function actionIndex()
 	{
