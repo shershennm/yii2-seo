@@ -1,6 +1,6 @@
 {
 	"name": "shershennm/yii2-seo",
-	"description": "Yii2 extension for simple generationg keywords and description",
+	"description": "Yii2 extension for simple generating keywords and description",
 	"version": "1.0",
 	"type": "yii2-extension",
 	"keywords": ["yii2", "seo", "keywords", "meta"],
