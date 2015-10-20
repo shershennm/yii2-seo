@@ -5,6 +5,7 @@ namespace shershennm\seo;
 use Yii;
 use yii\web\View;
 use yii\helpers\Html;
+use Title;
 
 /**
 * 
@@ -12,7 +13,10 @@ use yii\helpers\Html;
 class CustomView extends View
 {
 	public
-		$controllerNamespace;
+		$controllerNamespace,
+
+		$titleAppend,
+		$titlePrepend;
 
 	private
 		$_controller;
@@ -48,8 +52,31 @@ class CustomView extends View
 				$meta = $object->$actionName();
 
 				$this->addMeta($meta);
+
+				if ($object->title !== null)
+				{
+					$this->title = $this->buildTitle($object->title);
+				}
 			}
 		}
+	}
+
+	private function buildTitle($title)
+	{
+		$defaults = [
+			'defaultPrepend' => $this->defaultPrepend,
+			'defaultAppend' => $this->defaultAppend,
+		];
+			
+		if(is_array($object->title)) {
+			$title = new Title(array_merge($title, $defaults));
+		}
+		else
+		{
+			$title = new Title(array_merge(['title' => $title], $defaults));
+		}
+
+		return $title->buildTitle();
 	}
 
 	private function addMeta($metaArray)
