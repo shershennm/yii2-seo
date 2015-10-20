@@ -64,8 +64,8 @@ class CustomView extends View
 	private function buildTitle($title)
 	{
 		$defaults = [
-			'defaultPrepend' => $this->defaultPrepend,
-			'defaultAppend' => $this->defaultAppend,
+			'defaultPrepend' => $this->titlePrepend,
+			'defaultAppend' => $this->titleAppend,
 		];
 			
 		if(is_array($object->title)) {
