@@ -5,7 +5,7 @@ namespace shershennm\seo;
 use Yii;
 use yii\web\View;
 use yii\helpers\Html;
-use Title;
+use shershennm\seo\Title;
 
 /**
 * 
@@ -68,7 +68,7 @@ class CustomView extends View
 			'defaultAppend' => $this->titleAppend,
 		];
 			
-		if(is_array($object->title)) {
+		if(is_array($title)) {
 			$title = new Title(array_merge($title, $defaults));
 		}
 		else
