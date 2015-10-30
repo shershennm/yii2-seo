@@ -16,14 +16,19 @@ in config file:
 ```
 seo controller example:
 ```sh
-use shnm\SeoController;
+<?php
+
+namespace app\seoControllers;
+
+use Yii;
+use shershennm\seo\SeoController;
 
 class SiteController extends SeoController
 {
 	public function actionIndex()
 	{
 		$this->title = 'Hello world!';
-		
+
 		return [
 			['name' => 'keywords', 'value' => $this->getKeywords()],
 			['name' => 'description', 'value' => 'Cool page!'],
