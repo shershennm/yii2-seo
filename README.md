@@ -16,10 +16,14 @@ in config file:
 ```
 seo controller example:
 ```sh
-class SiteController
+use shnm\SeoController;
+
+class SiteController extends SeoController
 {
 	public function actionIndex()
 	{
+		$this->title = 'Hello world!';
+		
 		return [
 			['name' => 'keywords', 'value' => $this->getKeywords()],
 			['name' => 'description', 'value' => 'Cool page!'],

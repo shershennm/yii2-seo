@@ -88,7 +88,9 @@ class CustomView extends View
 
 	private function buildControllerClass()
 	{
-		return sprintf('%s\%sController', $this->controllerNamespace, ucfirst($this->controller->id));
+		preg_match('/\\w*$/', $this->controller->className(), $result);
+		$className = $result[0];
+		return sprintf('%s\%s', $this->controllerNamespace, $className);
 	}
 
 	private function buildActionFunction()
