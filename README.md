@@ -7,10 +7,15 @@ in config file:
 ```sh
 'components' => [
 	...
-    'view'         => [
-        'class' => 'shershennm\seo\CustomView',
-        'controllerNamespace' => \\seo controllers namespace
+    'seo'         => [
+        'class' => 'shershennm\seo\Seo',
+        'controllerMapping' => [
+            'app\controllers' => 'app\seo\controllers', \\controllers for seo module
+        ],
+
     ],
+    ...
+    'bootstrap' => ['log', 'seo'],
     ...
 ]
 ```
@@ -18,7 +23,7 @@ seo controller example:
 ```sh
 <?php
 
-namespace app\seoControllers;
+namespace app\seo\controllers;
 
 use Yii;
 use shershennm\seo\SeoController;
