@@ -1,7 +1,7 @@
 {
 	"name": "shershennm/yii2-seo",
 	"description": "Yii2 extension for simple generating keywords and description",
-	"version": "2.0.0",
+	"version": "2.0.2",
 	"type": "yii2-extension",
 	"keywords": ["yii2", "seo", "keywords", "meta"],
 	"homepage": "https://github.com/shershennm/yii2-seo",
