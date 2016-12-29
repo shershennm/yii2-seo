@@ -3,130 +3,162 @@
 namespace shershennm\seo;
 
 use Yii;
+
+use yii\base\ActionEvent;
 use yii\base\Component;
+use yii\base\ViewEvent;
+
+use yii\web\Controller;
+use yii\web\View;
+
 use yii\helpers\Html;
+
 use shershennm\seo\Title;
 
 /**
-* 
-*/
+ *
+ */
 class Seo extends Component
 {
-	public
-		$controllerMapping,
+    public
+        $controllerMapping,
 
-		$titleAppend,
-		$titlePrepend;
+        $defaultTitle,
+        $titleAppend,
+        $titlePrepend;
 
-	private
-		$_controller,
-		$_reflectionController;
+    private
+        $_reflectionController;
 
-	public function getController()
-	{
-		if ($this->_controller === null)
-		{
-			$this->_controller = Yii::$app->controller;
-		}
+    public function getController()
+    {
+        return Yii::$app->controller;
+    }
 
-		return $this->_controller;
-	}
+    public function getReflectionController()
+    {
+        if ($this->_reflectionController === null)
+        {
+            $this->_reflectionController = $this->buildReflectionController();
+        }
 
-	public function getReflectionController()
-	{
-		if ($this->_reflectionController === null)
-		{
-			$this->_reflectionController = $this->buildReflectionController();
-		}
+        return $this->_reflectionController;
+    }
 
-		return $this->_reflectionController;
-	}
+    public function init()
+    {
+        $this->initEventBranches();
 
-	
-	public function init()
-	{
-		parent::init();
+        parent::init();
+    }
 
-		if (Yii::$app->view !== null)
-		{
-			Yii::$app->view->on(yii\web\View::EVENT_BEGIN_PAGE, [$this, 'eventSetMeta']);
-		}
-	}
+    private function initEventBranches()
+    {
+        ActionEvent::on(Controller::className(), Controller::EVENT_BEFORE_ACTION, [$this, 'eventControllerBeforeAction']);
+    }
 
-	public function eventSetMeta()
-	{
-		if ($this->isValidController() && $this->isSeoControllerInMapping() && $this->isSeoControllerExists())
-		{
-			$seoController = Yii::createObject($this->buildSeoControllerClassName());
-			$actionMethod = $this->controller->action->actionMethod;
+    public function eventControllerBeforeAction($event)
+    {
+        ActionEvent::off(Controller::className(), Controller::EVENT_BEFORE_ACTION, [$this, 'eventControllerBeforeAction']);
 
-			if (method_exists($seoController, $actionMethod))
-			{
-				$seoController->controller = $this->controller;
+        $event->sender->view->on(View::EVENT_BEFORE_RENDER, [$this, 'eventViewBeforeRender']);
+    }
 
-				$meta = $seoController->$actionMethod();
-				$this->addMeta($meta);
+    public function eventViewBeforeRender($event)
+    {
+        $event->sender->off(View::EVENT_BEFORE_RENDER, [$this, 'eventViewBeforeRender']);
 
-				if ($seoController->title !== null)
-				{
-					Yii::$app->view->title = $this->buildTitle($seoController->title);
-				}
-			}
-		}
-	}
+        $this->setMeta($event);
+    }
 
-	private function buildTitle($title)
-	{
-		$defaults = [
-			'defaultPrepend' => $this->titlePrepend,
-			'defaultAppend' => $this->titleAppend,
-		];
-			
-		if(is_array($title)) {
-			$title = new Title(array_merge($title, $defaults));
-		}
-		else
-		{
-			$title = new Title(array_merge(['title' => $title], $defaults));
-		}
+    public function setMeta($viewEvent)
+    {
+        $set = false;
 
-		return $title->buildTitle();
-	}
+        if ($this->isValidController() && $this->isSeoControllerInMapping() && $this->isSeoControllerExists())
+        {
+            $set = $this->executeSeoControllerAction($viewEvent);
+        }
 
-	private function addMeta($metaArray)
-	{
-		foreach ($metaArray as $meta) {
-			Yii::$app->view->metaTags[] = Html::tag('meta', '', $meta);
-		}
-	}
+        if ($set === false)
+        {
+            $this->addTitle($viewEvent->sender);
+        }
+    }
 
-	private function buildReflectionController()
-	{
-		return (new \ReflectionClass($this->controller));
-	}
+    private function executeSeoControllerAction($viewEvent)
+    {
+        $seoController = Yii::createObject($this->buildSeoControllerClassName());
+        $actionMethod = $this->controller->action->actionMethod;
 
-	private function isSeoControllerInMapping()
-	{
-		return isset($this->controllerMapping[$this->reflectionController->getNamespaceName()]);
-	}
+        if (method_exists($seoController, $actionMethod))
+        {
+            $seoController->controller = $this->controller;
 
-	private function isSeoControllerExists()
-	{
-		return class_exists($this->buildSeoControllerClassName());
-	}
+            $meta = $seoController->$actionMethod($viewEvent->params);
 
-	private function isValidController()
-	{
-		return (Yii::$app->controller !== null && Yii::$app->controller->action->className() !== 'yii\web\ErrorAction');
-	}
+            $this->addMeta($viewEvent->sender, $meta);
+            $this->addTitle($viewEvent->sender, $seoController->title);
 
-	private function buildSeoControllerClassName()
-	{
-		return sprintf('%s\%s', $this->controllerMapping[$this->reflectionController->getNamespaceName()], $this->reflectionController->getShortName());
-	}
+            return true;
+        }
 
-	private function buildActionFunction()
-	{
-		return sprintf('action%s', ucfirst($this->controller->action->id));
-	}
+        return false;
+    }
+
+    private function buildTitle($title)
+    {
+        $defaults = [
+            'defaultTitle' => $this->defaultTitle,
+            'defaultPrepend' => $this->titlePrepend,
+            'defaultAppend' => $this->titleAppend,
+        ];
+
+        if(is_array($title)) {
+            $title = new Title(array_merge($title, $defaults));
+        }
+        else
+        {
+            $title = new Title(array_merge(['title' => $title], $defaults));
+        }
+
+        return $title->buildTitle();
+    }
+
+    public function addMeta($view, $metaArray)
+    {
+        foreach ($metaArray as $meta) {
+            $view->metaTags[] = Html::tag('meta', '', $meta);
+        }
+    }
+
+    public function addTitle($view, $title = null)
+    {
+        $view->title = $this->buildTitle($title);
+    }
+
+    private function buildReflectionController()
+    {
+        return (new \ReflectionClass($this->controller));
+    }
+
+    private function isSeoControllerInMapping()
+    {
+        return isset($this->controllerMapping[$this->reflectionController->getNamespaceName()]);
+    }
+
+    private function isSeoControllerExists()
+    {
+        return class_exists($this->buildSeoControllerClassName());
+    }
+
+    private function isValidController()
+    {
+        return (Yii::$app->controller !== null && Yii::$app->controller->action->className() !== 'yii\web\ErrorAction');
+    }
+
+    private function buildSeoControllerClassName()
+    {
+        return sprintf('%s\%s', $this->controllerMapping[$this->reflectionController->getNamespaceName()], $this->reflectionController->getShortName());
+    }
 }

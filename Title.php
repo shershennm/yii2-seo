@@ -3,49 +3,66 @@
 namespace shershennm\seo;
 
 use Yii;
-use yii\base\Object;
+
+use yii\base\Model;
 
 
-class Title extends Object
+class Title extends Model
 {
-	public
-		$append,
-		$prepend,
-		$title,
-		$defaultPrepend,
-		$defaultAppend;
+    public
+        $append,
+        $prepend,
+        $title,
+        $defaultTitle,
+        $defaultPrepend,
+        $defaultAppend;
 
-	public function buildTitle()
-	{
-		return sprintf('%s%s%s', $this->getPrepend(), $this->title, $this->getAppend());
-	}
+    public function buildTitle()
+    {
+        return sprintf('%s%s%s', $this->getPrepend(), $this->getTitle(), $this->getAppend());
+    }
 
-	public function getPrepend()
-	{
-		if ($this->prepend === null)
-		{
-			$this->prepend = ($this->defaultPrepend === null) ? '' : $this->defaultPrepend;
-		}
-		elseif ($this->prepend === false)
-		{
-			$this->prepend = '';
-		}
+    public function getTitle()
+    {
+        if ($this->title === null)
+        {
+            if ($this->defaultTitle !== null)
+            {
+                return $this->defaultTitle;
+            }
 
-		return $this->prepend;
-	}
+            return '';
+        }
 
-	public function getAppend()
-	{
-		if ($this->append === null)
-		{
-			$this->append = ($this->defaultAppend === null) ? '' : $this->defaultAppend;
-		}
-		elseif ($this->append === false)
-		{
-			$this->append = '';
-		}
+        return $this->title;
+    }
 
-		return $this->append;
-	}
+    public function getPrepend()
+    {
+        if ($this->prepend === null)
+        {
+            $this->prepend = ($this->defaultPrepend === null) ? '' : $this->defaultPrepend;
+        }
+        elseif ($this->prepend === false)
+        {
+            $this->prepend = '';
+        }
+
+        return $this->prepend;
+    }
+
+    public function getAppend()
+    {
+        if ($this->append === null)
+        {
+            $this->append = ($this->defaultAppend === null) ? '' : $this->defaultAppend;
+        }
+        elseif ($this->append === false)
+        {
+            $this->append = '';
+        }
+
+        return $this->append;
+    }
 
 }

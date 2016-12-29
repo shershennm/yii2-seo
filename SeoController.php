@@ -7,7 +7,13 @@ use yii\base\Object;
 
 abstract class SeoController extends Object
 {
-	public
-		$controller,
-		$title;
+    /**
+     * @var $title string Page <title> tag value
+     */
+	public $title;
+
+    /**
+     * @var $controller \yii\web\Controller Web Controller instance
+     */
+	public $controller;
 }
