@@ -36,9 +36,12 @@ class SiteController extends SeoController
     public function actionIndex($viewParams)
     {
         $this->title = 'Hello world!';
-        
+
+        $this->registerMetaTag(['name' => 'description', 'content' => 'Cool page!']);
+        $this->registerLinkTag([['rel' => 'next', 'href' => 'https://my-cool-page.lh/article/2']]);
+
         return [
-            ['name' => 'keywords', 'content' => $this->getKeywords()], // params for Html::tag('meta', '', $params)
+            ['name' => 'keywords', 'content' => $this->getKeywords()], // params for View::registerMetaTag() function
             ['name' => 'description', 'content' => 'Cool page!'],
         ];
     }

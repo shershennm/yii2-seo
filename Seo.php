@@ -94,6 +94,7 @@ class Seo extends Component
         if (method_exists($seoController, $actionMethod))
         {
             $seoController->controller = $this->controller;
+            $seoController->view = $viewEvent->sender;
 
             $meta = $seoController->$actionMethod($viewEvent->params);
 
@@ -128,7 +129,7 @@ class Seo extends Component
     public function addMeta($view, $metaArray)
     {
         foreach ($metaArray as $meta) {
-            $view->metaTags[] = Html::tag('meta', '', $meta);
+            $view->registerMetaTag($meta);
         }
     }
 
