@@ -2,6 +2,15 @@
 
 Yii2 module for easy creating meta tags 
 
+# Installation
+
+Yii <= 2.0.12
+
+`composer require shershennm/yii2-seo:"^2.0"`
+
+Yii >= 2.0.13
+
+`composer require shershennm/yii2-seo:"^3.0"`
 # Usage
 in config file:
 ```sh

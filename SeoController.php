@@ -2,10 +2,9 @@
 
 namespace shershennm\seo;
 
-use Yii;
-use yii\base\Object;
+use yii\base\BaseObject;
 
-abstract class SeoController extends Object
+abstract class SeoController extends BaseObject
 {
     /**
      * @var $title string Page <title> tag value
