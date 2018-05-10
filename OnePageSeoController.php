@@ -12,12 +12,13 @@ abstract class OnePageSeoController extends SeoController
     protected $titles = [];
 
     /**
-     * @var array Array of routes with titles. Routes are regular expressions in this case.
+     * @var array Array of routes with titles. Routes are regular expressions in this case
      */
     protected $wildcardTitles = [];
 
     /**
-     * Default action for one page controller
+     * Default action for one page controller.
+     *
      * @return array
      */
     public function actionIndex()
@@ -30,7 +31,8 @@ abstract class OnePageSeoController extends SeoController
     /**
      * @param $route
      */
-    protected function setTitle($route) {
+    protected function setTitle($route)
+    {
         if (isset($this->titles[$route])) {
             $this->title = $this->titles[$route];
 
