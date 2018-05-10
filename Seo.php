@@ -3,7 +3,6 @@
 namespace shershennm\seo;
 
 use Yii;
-
 use yii\base\ActionEvent;
 use yii\base\Component;
 use yii\base\ViewEvent;
@@ -13,7 +12,8 @@ use yii\web\View;
 class Seo extends Component
 {
     /**
-     * controller namespace => seo controller namespace
+     * controller namespace => seo controller namespace.
+     *
      * @var array
      */
     public $controllerMapping;
@@ -51,8 +51,7 @@ class Seo extends Component
      */
     public function getReflectionController()
     {
-        if ($this->_reflectionController === null)
-        {
+        if ($this->_reflectionController === null) {
             $this->_reflectionController = $this->buildReflectionController();
         }
 
@@ -60,7 +59,7 @@ class Seo extends Component
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function init()
     {
@@ -69,9 +68,6 @@ class Seo extends Component
         parent::init();
     }
 
-    /**
-     * @return void
-     */
     private function initEventBranches()
     {
         ActionEvent::on(Controller::className(), Controller::EVENT_BEFORE_ACTION, [$this, 'eventControllerBeforeAction']);
@@ -79,7 +75,6 @@ class Seo extends Component
 
     /**
      * @param $event ActionEvent
-     * @return void
      */
     public function eventControllerBeforeAction($event)
     {
@@ -89,7 +84,7 @@ class Seo extends Component
 
     /**
      * @param $event ViewEvent
-     * @return void
+     *
      * @throws \yii\base\InvalidConfigException
      */
     public function eventViewBeforeRender($event)
@@ -101,6 +96,7 @@ class Seo extends Component
 
     /**
      * @param $viewEvent ViewEvent
+     *
      * @throws \yii\base\InvalidConfigException
      */
     public function setMeta($viewEvent)
@@ -118,7 +114,9 @@ class Seo extends Component
 
     /**
      * @param $viewEvent ViewEvent
+     *
      * @return bool
+     *
      * @throws \yii\base\InvalidConfigException
      */
     private function executeSeoControllerAction($viewEvent)
@@ -126,8 +124,7 @@ class Seo extends Component
         $seoController = Yii::createObject($this->buildSeoControllerClassName());
         $actionMethod = $this->controller->action->actionMethod;
 
-        if (method_exists($seoController, $actionMethod))
-        {
+        if (method_exists($seoController, $actionMethod)) {
             $seoController->controller = $this->controller;
             $seoController->view = $viewEvent->sender;
 
@@ -144,6 +141,7 @@ class Seo extends Component
 
     /**
      * @param $title string
+     *
      * @return string
      */
     protected function buildTitle($title)
@@ -154,7 +152,7 @@ class Seo extends Component
             'defaultAppend' => $this->titleAppend,
         ];
 
-        if(is_array($title)) {
+        if (is_array($title)) {
             $title = new Title(array_merge($title, $defaults));
         } else {
             $title = new Title(array_merge(['title' => $title], $defaults));
@@ -166,7 +164,6 @@ class Seo extends Component
     /**
      * @param $view View
      * @param $metaArray array
-     * @return void
      */
     public function addMeta($view, $metaArray)
     {
@@ -189,7 +186,7 @@ class Seo extends Component
      */
     private function buildReflectionController()
     {
-        return (new \ReflectionClass($this->controller));
+        return new \ReflectionClass($this->controller);
     }
 
     /**
@@ -213,7 +210,7 @@ class Seo extends Component
      */
     private function isValidController()
     {
-        return (Yii::$app->controller !== null && Yii::$app->controller->action->className() !== 'yii\web\ErrorAction');
+        return Yii::$app->controller !== null && Yii::$app->controller->action->className() !== 'yii\web\ErrorAction';
     }
 
     /**

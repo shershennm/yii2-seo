@@ -49,10 +49,8 @@ class Title extends Model
      */
     public function getTitle()
     {
-        if ($this->title === null)
-        {
-            if ($this->defaultTitle !== null)
-            {
+        if ($this->title === null) {
+            if ($this->defaultTitle !== null) {
                 return $this->defaultTitle;
             }
 
@@ -89,5 +87,4 @@ class Title extends Model
 
         return $this->append;
     }
-
 }
