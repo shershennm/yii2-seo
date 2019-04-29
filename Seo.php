@@ -122,21 +122,26 @@ class Seo extends Component
     private function executeSeoControllerAction($viewEvent)
     {
         $seoController = Yii::createObject($this->buildSeoControllerClassName());
-        $actionMethod = $this->controller->action->actionMethod;
 
-        if (method_exists($seoController, $actionMethod)) {
-            $seoController->controller = $this->controller;
-            $seoController->view = $viewEvent->sender;
-
-            $meta = $seoController->$actionMethod($viewEvent->params);
-
-            $this->addMeta($viewEvent->sender, $meta);
-            $this->addTitle($viewEvent->sender, $seoController->title);
-
-            return true;
+        if (!property_exists($this->controller->action, 'actionMethod')) {
+            return false;
         }
 
-        return false;
+        $actionMethod = $this->controller->action->actionMethod;
+
+        if (!method_exists($seoController, $actionMethod)) {
+            return false;
+        }
+
+        $seoController->controller = $this->controller;
+        $seoController->view = $viewEvent->sender;
+
+        $meta = $seoController->$actionMethod($viewEvent->params);
+
+        $this->addMeta($viewEvent->sender, $meta);
+        $this->addTitle($viewEvent->sender, $seoController->title);
+
+        return true;
     }
 
     /**
